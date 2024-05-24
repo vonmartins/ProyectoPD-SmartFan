@@ -1,0 +1,240 @@
+.configuracin-container {
+  width: 100%;
+  display: flex;
+  overflow: auto;
+  min-height: 100vh;
+  align-items: center;
+  border-color: var(--dl-color-theme-neutral-dark);
+  border-width: 1px;
+  flex-direction: column;
+  background-size: cover;
+  justify-content: flex-start;
+  background-image: url('https://i.postimg.cc/vHWJgpxc/Dise-o-sin-t-tulo-4.png');
+}
+.configuracin-navbar-interactive {
+  fill: var(--dl-color-theme-neutral-dark);
+  color: #1b8a1b;
+  width: 1200px;
+  height: var(--dl-size-size-medium);
+  display: flex;
+  align-items: center;
+  padding-top: var(--dl-space-space-twounits);
+  padding-left: var(--dl-space-space-threeunits);
+  padding-right: var(--dl-space-space-threeunits);
+  padding-bottom: var(--dl-space-space-twounits);
+  justify-content: space-between;
+  background-image: linear-gradient(90deg, rgb(241, 242, 181) 0.00%,rgb(19, 80, 88) 100.00%);
+}
+.configuracin-desktop-menu {
+  flex: 1;
+  display: flex;
+  align-self: center;
+  align-items: center;
+  justify-content: center;
+}
+.configuracin-links {
+  gap: var(--dl-space-space-unit);
+  flex: 1;
+  width: 633px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: center;
+}
+.configuracin-navlink {
+  color: #ffffff;
+  width: 136px;
+  font-size: 28px;
+  text-align: center;
+  transition: 0.3s;
+  font-family: "Exo 2";
+  border-radius: var(--dl-radius-radius-radius4);
+  text-transform: uppercase;
+  text-decoration: none;
+}
+.configuracin-navlink:hover {
+  fill: var(--dl-color-theme-2);
+  color: var(--dl-color-theme-2);
+}
+.configuracin-navlink1 {
+  color: #ffffff;
+  width: 136px;
+  font-size: 28px;
+  text-align: center;
+  transition: 0.3s;
+  font-family: "Exo 2";
+  border-radius: var(--dl-radius-radius-radius4);
+  text-transform: uppercase;
+  text-decoration: none;
+}
+.configuracin-navlink1:hover {
+  fill: var(--dl-color-theme-2);
+  color: var(--dl-color-theme-2);
+}
+.configuracin-navlink2 {
+  color: #ffffff;
+  width: 136px;
+  font-size: 28px;
+  text-align: center;
+  transition: 0.3s;
+  font-family: "Exo 2";
+  border-radius: var(--dl-radius-radius-radius4);
+  text-transform: uppercase;
+  text-decoration: none;
+}
+.configuracin-navlink2:hover {
+  fill: var(--dl-color-theme-2);
+  color: var(--dl-color-theme-2);
+}
+.configuracin-container1 {
+  flex: 0 0 auto;
+  width: 196px;
+  height: 75px;
+  display: flex;
+  align-self: center;
+  align-items: flex-end;
+  justify-content: center;
+}
+.configuracin-date-time {
+  color: #ffffff;
+  opacity: 0.5;
+  font-family: "Exo 2";
+}
+.configuracin-burger-menu {
+  display: none;
+}
+.configuracin-icon {
+  width: var(--dl-size-size-xsmall);
+  height: var(--dl-size-size-xsmall);
+}
+.configuracin-mobile-menu {
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100vh;
+  display: none;
+  padding: 32px;
+  z-index: 100;
+  position: absolute;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: #fff;
+}
+.configuracin-nav {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+.configuracin-top {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--dl-space-space-threeunits);
+  justify-content: space-between;
+}
+.configuracin-logo {
+  height: 2rem;
+}
+.configuracin-close-menu {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.configuracin-icon02 {
+  width: var(--dl-size-size-xsmall);
+  height: var(--dl-size-size-xsmall);
+}
+.configuracin-links1 {
+  flex: 0 0 auto;
+  display: flex;
+  align-self: flex-start;
+  align-items: flex-start;
+  flex-direction: column;
+}
+.configuracin-text {
+  margin-bottom: var(--dl-space-space-unit);
+}
+.configuracin-text1 {
+  margin-bottom: var(--dl-space-space-unit);
+}
+.configuracin-text2 {
+  margin-bottom: var(--dl-space-space-unit);
+}
+.configuracin-text3 {
+  margin-bottom: var(--dl-space-space-unit);
+}
+.configuracin-text4 {
+  margin-bottom: var(--dl-space-space-unit);
+}
+.configuracin-buttons {
+  display: flex;
+  margin-top: var(--dl-space-space-unit);
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.configuracin-login {
+  margin-right: var(--dl-space-space-twounits);
+}
+.configuracin-icon04 {
+  width: var(--dl-size-size-xsmall);
+  height: var(--dl-size-size-xsmall);
+  margin-right: var(--dl-space-space-twounits);
+}
+.configuracin-icon06 {
+  width: var(--dl-size-size-xsmall);
+  height: var(--dl-size-size-xsmall);
+  margin-right: var(--dl-space-space-twounits);
+}
+.configuracin-icon08 {
+  width: var(--dl-size-size-xsmall);
+  height: var(--dl-size-size-xsmall);
+}
+@media(max-width: 1200px) {
+  .configuracin-navbar-interactive {
+    width: 100%;
+    height: var(--dl-size-size-medium);
+  }
+}
+@media(max-width: 767px) {
+  .configuracin-navbar-interactive {
+    padding-left: var(--dl-space-space-twounits);
+    padding-right: var(--dl-space-space-twounits);
+  }
+  .configuracin-desktop-menu {
+    display: none;
+  }
+  .configuracin-burger-menu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .configuracin-text {
+    margin-bottom: var(--dl-space-space-unit);
+  }
+  .configuracin-text1 {
+    margin-left: 0;
+    margin-bottom: var(--dl-space-space-unit);
+  }
+  .configuracin-text2 {
+    margin-left: 0;
+    margin-bottom: var(--dl-space-space-unit);
+  }
+  .configuracin-text3 {
+    margin-left: 0;
+    margin-bottom: var(--dl-space-space-unit);
+  }
+  .configuracin-text4 {
+    margin-left: 0;
+    margin-bottom: var(--dl-space-space-unit);
+  }
+}
+@media(max-width: 479px) {
+  .configuracin-navbar-interactive {
+    padding: var(--dl-space-space-unit);
+  }
+  .configuracin-mobile-menu {
+    padding: 16px;
+  }
+}

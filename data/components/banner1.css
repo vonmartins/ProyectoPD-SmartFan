@@ -1,0 +1,44 @@
+.banner1-container {
+  gap: var(--dl-space-space-unit);
+  height: 206px;
+  display: flex;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(96, 162, 38, 0.3);
+}
+.banner1-max-width {
+  gap: var(--dl-space-space-oneandhalfunits);
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+.banner1-container1 {
+  gap: var(--dl-space-space-halfunit);
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+.banner1-title {
+  color: #ffffff;
+  font-size: 60px;
+  text-align: center;
+  font-family: "Exo 2";
+}
+.banner1-text {
+  color: #ffffff;
+  text-align: center;
+  font-family: "Exo 2";
+}
+.banner1-root-class-name {
+  height: var(--dl-size-size-large);
+}
+@media(max-width: 1200px) {
+  .banner1-text {
+    font-style: normal;
+    font-weight: 300;
+  }
+  .banner1-root-class-name {
+    height: var(--dl-size-size-large);
+  }
+}
