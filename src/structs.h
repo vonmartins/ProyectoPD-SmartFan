@@ -9,16 +9,6 @@
         UNLOCKED
     };
 
-    typedef struct {
-        const uint8_t PIN;
-        bool detection;        
-    }PIRSensor;
-
-    typedef struct {
-        const uint8_t PIN;
-        uint8_t debounceTime;
-    } Button;
-
     typedef enum {
         MESSAGE_TYPE_INTEGER,
         MESSAGE_TYPE_DECIMAL,
@@ -35,15 +25,15 @@
     } OLEDMessage;
 
     typedef struct {
-        uint8_t pin1;
-        uint8_t pin2;
-        uint8_t enablePin;
-        uint8_t pwmChannel;
-        uint16_t frequency;
-        uint8_t resolution;
+        const uint8_t pin1;
+        const uint8_t pin2;
+        const uint8_t enablePin;
+        const uint8_t pwmChannel;
+        const uint16_t frequency;
+        const uint8_t resolution;
         uint8_t dutyCycle;
         uint8_t speed;
-        bool active;
+        volatile bool active;
     } DCMotor;
 
 #endif

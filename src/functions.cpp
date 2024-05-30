@@ -11,9 +11,18 @@
 
 
 /*!
- *  @brief  Connects to WiFi network
+ *  @brief  Connects to WiFi network with static IP on 192.168.1.45
  */
 void connectWifi(){
+  IPAddress local_IP(192, 168, 1, 45);
+  IPAddress gateway(192, 168, 1, 1);
+  IPAddress subnet(255, 255, 0, 0);
+  IPAddress primaryDNS(8, 8, 8, 8);   
+  IPAddress secondaryDNS(8, 8, 4, 4); 
+
+  if(!WiFi.config(local_IP, gateway, subnet, primaryDNS, secondaryDNS)) {
+    Serial.println("STA Failed to configure");
+  }
   Serial.println("Connecting to the WiFi network...");
   Serial.println(WIFI_SSID);
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
@@ -161,87 +170,43 @@ void handle_DeactivateAutoMode(AsyncWebServerRequest *request) {
 }
 
 /*!
- *  @brief  Handles activation of PIR sensor server request
+ *  @brief  Handles activation of the Timer
  *  @param  request: AsyncWebServerRequest object
  */
-void handle_ActivatePIRSensor(AsyncWebServerRequest *request) {
-  activatePIRSensor();
-  if(PRINT_MODES) Serial.println("PIR sensor activated from server");
-  request->send(200, "text/plain", "PIR sensor activated");
+void handle_ActivateTimer(AsyncWebServerRequest *request) {
+  setFanTimer();
+  if(PRINT_MODES) Serial.println("Timer activated from server");
+  request->send(200, "text/plain", "Timer activated");
 }
 
 /*!
- *  @brief  Handles deactivation of PIR sensor server request
+ *  @brief  Handles deactivation of the Timer
  *  @param  request: AsyncWebServerRequest object
  */
-void handle_DeactivatePIRSensor(AsyncWebServerRequest *request) {
-  deactivatePIRSensor();
-  if(PRINT_MODES) Serial.println("PIR sensor deactivated from server");
-  request->send(200, "text/plain", "PIR sensor deactivated");
+void handle_DeactivateTimer(AsyncWebServerRequest *request) {
+  disableFanTimer();
+  if(PRINT_MODES) Serial.println("Timer deactivated from server");
+  request->send(200, "text/plain", "Timer deactivated");
 }
 
 /*!
- *  @brief  Interrupt Service Routine for fan button
+ *  @brief  Handles the Sensor Data
+ *  @param  request: AsyncWebServerRequest object
  */
-void IRAM_ATTR ISR_FanButton() {
-  static uint32_t lastInterruptTime = 0;
-  uint32_t buttonTime = millis();
-  if (buttonTime - lastInterruptTime > fanButton.debounceTime) {
-    lastInterruptTime = buttonTime;
-    if(motor.active) deactivateFan();
-    else activateFan();
-  }
-}
+void handle_GetSensorData(AsyncWebServerRequest *request) {
+  sensors_event_t event;
+  dht.temperature().getEvent(&event);
+  float temperature = event.temperature;
+  dht.humidity().getEvent(&event);
+  float humidity = event.relative_humidity;
 
-/*!
- *  @brief  Interrupt Service Routine for lock button
- */
-void IRAM_ATTR ISR_LockButton() {
-  static uint32_t lastInterruptTime = 0;
-  uint32_t buttonTime = millis();
-  if (buttonTime - lastInterruptTime > lockButton.debounceTime) {
-    lastInterruptTime = buttonTime;
-    if (currentState == LOCKED) setUnlocked();
-    else setLocked();
-  }
-}
+  String jsonResponse = "{";
+  jsonResponse += "\"temperature\":" + String(temperature, 1) + ",";
+  jsonResponse += "\"humidity\":" + String(humidity, 1);
+  jsonResponse += "}";
 
-/*!
- *  @brief  Interrupt Service Routine for auto mode button
- */
-void IRAM_ATTR ISR_AutoButton() {
-  static uint32_t lastInterruptTime = 0;
-  uint32_t buttonTime = millis();
-  if (buttonTime - lastInterruptTime > autoButton.debounceTime) {
-    lastInterruptTime = buttonTime;
-    if (autoMode) {
-      deactivateAutoMode();
-      motor.speed = 3;
-    } else if (!autoMode) {
-      deactivateNightMode();
-      activateAutoMode();
-    }
-  }
+  request->send(200, "application/json", jsonResponse);
 }
-
-/*!
- *  @brief  Interrupt Service Routine for night mode button
- */
-void IRAM_ATTR ISR_NightButton() {
-  static uint32_t lastInterruptTime = 0;
-  uint32_t buttonTime = millis();
-  if (buttonTime - lastInterruptTime > nightButton.debounceTime) {
-    lastInterruptTime = buttonTime;
-    if(nightMode) {
-      deactivateNightMode();
-      motor.speed = 3;
-    } else if (!nightMode) {
-      deactivateAutoMode();
-      activateNightMode();
-    }
-  }
-}
-
 
 /*!
  *  @brief  Sets current state to Unlocked
@@ -276,38 +241,6 @@ void oledClearTimerCallback(TimerHandle_t xTimer) {
 }
 
 /*!
- *  @brief  Deactivates PIR sensor
- */
-void deactivatePIRSensor() {
-  if (PIRTaskHandle != NULL) {
-    vTaskSuspend(PIRTaskHandle);
-    if(PRINT_MODES) Serial.println("PIR Sensor OFF");
-  }
-
-  OLEDMessage msg;
-  msg.type = MESSAGE_TYPE_STRING;
-  snprintf(msg.text, MAX_STRING_LENGTH, "PIR Sensor OFF");
-  xQueueSend(screenQueue, &msg, portMAX_DELAY);
-}
-
-/*!
- *  @brief  Activates PIR sensor
- */
-void activatePIRSensor() {
-  if (currentState == UNLOCKED && motor.active) {
-    if (PIRTaskHandle != NULL) {
-      vTaskResume(PIRTaskHandle);
-      if(PRINT_MODES) Serial.println("PIR Sensor ON");
-    } 
-
-    OLEDMessage msg;
-    msg.type = MESSAGE_TYPE_STRING;
-    snprintf(msg.text, MAX_STRING_LENGTH, "PIR Sensor ON");
-    xQueueSend(screenQueue, &msg, portMAX_DELAY);
-  }
-}
-
-/*!
  *  @brief  Deactivates the fan
  */
 void deactivateFan() {
@@ -315,7 +248,6 @@ void deactivateFan() {
     motor.active = false;
     deactivateAutoMode();
     deactivateNightMode();
-    deactivatePIRSensor();
     if(PRINT_MODES) Serial.println("Fan OFF");
 
     OLEDMessage msg;
@@ -380,17 +312,15 @@ void decrementFanSpeed() {
  *  @brief  Sets fan timer
  */
 void setFanTimer() {
-  if (currentState == UNLOCKED && motor.active) {
+  if (currentState == UNLOCKED && motor.active) {   
     if (fanTimer != NULL) {
-        xTimerStop(fanTimer, 0);
-        xTimerDelete(fanTimer, 0);
-    }
-    fanTimer = xTimerCreate("FanTimer", pdMS_TO_TICKS(FanTimerDuration), pdFALSE, (void *)0, timerCallback);
-    if (fanTimer != NULL) {
+        if (xTimerIsTimerActive(fanTimer) == pdTRUE) {
+          xTimerStop(fanTimer, 0); 
+        }
         xTimerStart(fanTimer, 0);
         Serial.print("Fan timer set for ");
-        Serial.print(FanTimerDuration);
-        Serial.println(" milliseconds");
+        Serial.print(FanTimerDuration/60000);
+        Serial.println(" minutes");
     } else {
         Serial.println("Failed to create timer");
     }
@@ -496,6 +426,20 @@ uint8_t adjustFanSpeedBasedOnTemperature() {
 }
 
 /*!
+ *  @brief  Adjusts fan speed based on temperature
+ *  @param  Speed Fan speed value from 0 to 5
+ *  @return Duty cycle from 102 to 255
+ */
+uint8_t speedToDutyCyle(int8_t speed) {
+  if      (speed == 5) return 245;
+  else if (speed == 4) return 222;
+  else if (speed == 3) return 182;
+  else if (speed == 2) return 142;
+  else if (speed == 1) return 112;
+  else return 0;
+}
+
+/*!
  *  @brief  Task that manages lock state changes
  */
 void taskManageStates(void *pvParameters) {  
@@ -533,9 +477,10 @@ void ledsTask(void *parameters) {
   for (;;) {
     digitalWrite(LED_AUTO_PIN, autoMode ? HIGH : LOW);
     digitalWrite(LED_NIGHT_PIN, nightMode ? HIGH : LOW);
+    digitalWrite(LED_FAN_PIN, motor.active ? HIGH : LOW);
     if (currentState == LOCKED) digitalWrite(LED_LOCK_PIN, HIGH);
       else digitalWrite(LED_LOCK_PIN, LOW); 
-    digitalWrite(LED_FAN_PIN, motor.active ? HIGH : LOW);
+    
     vTaskDelay(pdMS_TO_TICKS(200));
   } 
 }
@@ -549,15 +494,15 @@ void fanTask(void *parameters) {
     if(motor->active && currentState == UNLOCKED) {
       if (autoMode) motor->speed = adjustFanSpeedBasedOnTemperature();
       if (nightMode) motor->speed = NIGHT_MODE_SPEED;
-      motor->dutyCycle = 255 * ((float)motor->speed / 5.0);
+      motor->dutyCycle = speedToDutyCyle(motor->speed);
       if (PRINT_FAN_VALUES) {
         Serial.printf("Speed: %d", motor->speed);
-        Serial.printf(" | DutyCycle: ", motor->dutyCycle);
+        Serial.printf(" | DutyCycle: %d", motor->dutyCycle);
         Serial.printf(" | Auto Mode = %d", autoMode);
         Serial.printf(" | Night Mode = %d", nightMode);
         Serial.println("");
       }
-      digitalWrite(motor->pin1, HIGH);
+      digitalWrite(motor->pin1, LOW);
       digitalWrite(motor->pin2, LOW);
       ledcWrite(motor->pwmChannel, motor->dutyCycle);
     } else {
@@ -566,28 +511,6 @@ void fanTask(void *parameters) {
       ledcWrite(motor->pwmChannel, 0);
     }
     vTaskDelay(pdMS_TO_TICKS(300));
-  }
-}
-
-/*!
- *  @brief  Task that handles PIR sensor
- */
-void PIRTask(void *pvParameters) {
-  for(;;) {
-    pirSensor.detection = digitalRead(pirSensor.PIN);
-    if (pirSensor.detection) {
-      if (PRINT_PIR) Serial.println("Motion detected!");
-      if (fanTimer != NULL) {
-        if (xTimerReset(fanTimer, 0) != pdPASS) {
-          if (PRINT_PIR) Serial.println("Failed to reset the fan timer");
-        } else {
-          if (PRINT_PIR) Serial.println("Timer restarted");
-        }
-      } else {
-        if (PRINT_PIR) Serial.println("Fan timer is NULL");
-      }
-    }    
-    vTaskDelay(500 / portTICK_PERIOD_MS); 
   }
 }
 

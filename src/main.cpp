@@ -13,24 +13,14 @@
 TimerHandle_t fanTimer = NULL;
 TimerHandle_t oledClearTimer = NULL;
 
-// ------- PIR Sensor ----------
-PIRSensor pirSensor = {PIR_PIN, false};
-
 // ---------- DC MOTOR ----------
 DCMotor motor = {MOTOR_PIN1, MOTOR_PIN2, MOTOR_ENABLE_PIN, PWM_CHANNEL, PWM_FREQUENCY, PWM_RESOLUTION};
 
 // ------------------- WEB SERVER -------------------
 AsyncWebServer server(80);
 
-// ------------------- Buttons ----------------------
-Button lockButton  = {LOCK_BUTTON_PIN, BUTTON_DEBOUNCE_TIME};
-Button autoButton  = {AUTO_BUTTON_PIN, BUTTON_DEBOUNCE_TIME};
-Button nightButton = {NIGHT_BUTTON_PIN, BUTTON_DEBOUNCE_TIME};
-Button fanButton   = {FAN_BUTTON_PIN, BUTTON_DEBOUNCE_TIME};
-
 // ---------------- FreeRTOS --------------------
 QueueHandle_t screenQueue;
-TaskHandle_t PIRTaskHandle = NULL;
 
 // ---------------- OLED SCREEN -------------------
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
@@ -47,8 +37,8 @@ float currentHumidity;
 
 String webContent;
 
-bool autoMode;
-bool nightMode;
+volatile bool autoMode;
+volatile bool nightMode;
 
 // -----------------------------------------------------------
 
@@ -63,22 +53,11 @@ void setup() {
   pinMode(LED_LOCK_PIN, OUTPUT);
   pinMode(LED_AUTO_PIN, OUTPUT);
   pinMode(LED_NIGHT_PIN, OUTPUT);
-  pinMode(lockButton.PIN, INPUT_PULLUP);
-  pinMode(autoButton.PIN, INPUT_PULLUP);
-  pinMode(nightButton.PIN, INPUT_PULLUP);
-  pinMode(fanButton.PIN, INPUT_PULLUP);
   pinMode(motor.pin1, OUTPUT);
   pinMode(motor.pin2, OUTPUT);
   pinMode(motor.enablePin, OUTPUT);
-  pinMode(pirSensor.PIN, INPUT);
 
-// ----- Init Interrupts -----
-  attachInterrupt(digitalPinToInterrupt(lockButton.PIN), &ISR_LockButton, FALLING);
-  attachInterrupt(digitalPinToInterrupt(autoButton.PIN), &ISR_AutoButton, FALLING);
-  attachInterrupt(digitalPinToInterrupt(nightButton.PIN), &ISR_NightButton, FALLING);
-  attachInterrupt(digitalPinToInterrupt(fanButton.PIN), &ISR_FanButton, FALLING);
-
-// Configurar la funcionalidad PWM
+// ----- Init PWM ----- 
   ledcSetup(motor.pwmChannel, motor.frequency, motor.resolution);
   ledcAttachPin(motor.enablePin, motor.pwmChannel);
  
@@ -121,7 +100,6 @@ dht.begin();
   xTaskCreate(oledTask, "OLEDTask", 2048, NULL, 5, NULL);
   xTaskCreate(tempSensorTask, "TempSensorTask", 4096, NULL, 3, NULL);
   xTaskCreate(fanTask, "Fan Task", 2048, &motor, 3, NULL);
-  xTaskCreate(PIRTask, "PIR Sensor Task", 2048, NULL, 4, &PIRTaskHandle);
   xTaskCreate(ledsTask, "LED Control Task", 2048, NULL, 5, NULL);
 
 // ----- Init WiFi -----
@@ -139,8 +117,9 @@ dht.begin();
   server.on("/deactivateNightMode", HTTP_GET, handle_DeactivateNightMode);
   server.on("/activateAutoMode", HTTP_GET, handle_ActivateAutoMode);
   server.on("/deactivateAutoMode", HTTP_GET, handle_DeactivateAutoMode);
-  server.on("/activatePIRSensor", HTTP_GET, handle_ActivatePIRSensor);
-  server.on("/deactivatePIRSensor", HTTP_GET, handle_DeactivatePIRSensor);
+  server.on("/setTimerOn", HTTP_GET, handle_ActivateTimer);
+  server.on("/setTimerOff", HTTP_GET, handle_DeactivateTimer);
+  server.on("/data", HTTP_GET, handle_GetSensorData);
   server.begin();
 
 // ----- Init states -----

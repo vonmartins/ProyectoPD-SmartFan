@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Cool Beloved Ostrich</title>
+    <title>Smart Fan Web</title>
     <meta property="og:title" content="Cool Beloved Ostrich" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta charset="utf-8" />
@@ -66,10 +66,10 @@
         <header data-thq="thq-navbar" class="home-navbar-interactive">
           <div data-thq="thq-navbar-nav" class="home-desktop-menu">
             <nav class="home-links">
-              <a href="index.html" class="home-navlink">Control</a>
-              <a href="historial.html" class="home-navlink1">Historial</a>
-              <a href="configuracin.html" class="home-navlink2">
-                Configuración
+              <a href="index.html" class="home-control">Control</a>
+              <a href="historial.html" class="home-historial">history</a>
+              <a href="configuracin.html" class="home-configuration">
+                configuration
               </a>
             </nav>
             <div class="home-container01">
@@ -139,7 +139,7 @@
           <div class="banner1-max-width thq-section-max-width">
             <div class="banner1-container1">
               <h2 class="banner1-title thq-heading-2">
-                <span>SMART STATION</span>
+                <span>SMART FAN</span>
               </h2>
               <h3 class="banner1-text thq-heading-3">
                 <span>IMMERSIVE LIVING</span>
@@ -148,8 +148,82 @@
           </div>
         </div>
         <div class="home-container02">
+          <div id="StartStopElement" class="home-start-stop">
+            <div class="home-container03">
+              <div class="button-container button-root-class-name">
+                <button id="startButton" type="button" class="button-button button">
+                  <span>START</span>
+                </button>
+              </div>
+            </div>
+            <div class="home-container04">
+              <div class="button-container button-root-class-name3">
+                <button id="stopButton" type="button" class="button-button button">
+                  <span>STOP</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div id="AutoModeElement" class="home-auto-mode">
+            <div class="home-container05">
+              <div class="button-container button-root-class-name4">
+                <button id="autoOnButton" type="button" class="button-button button">
+                  <span>AUTO ON</span>
+                </button>
+              </div>
+            </div>
+            <div class="home-container06">
+              <div class="button-container button-root-class-name5">
+                <button id="autoOffButton" type="button" class="button-button button">
+                  <span>AUTO OFF</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="home-speed">
+            <div class="home-container07">
+              <div class="button-container button-root-class-name6">
+                <button id="speedUpButton" type="button" class="button-button button">
+                  <span>UP</span>
+                </button>
+              </div>
+            </div>
+            <div class="home-container08">
+              <div class="button-container button-root-class-name7">
+                <button id="speedDownButton" type="button" class="button-button button">
+                  <span>DOWN</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="home-time-date-temp">
+            <div class="home-time">
+              <span class="home-text05">
+                <span id="current-time"></span>
+                <br />
+              </span>
+            </div>
+            <div class="home-temp-hum">
+              <div class="home-container09">
+                <div class="home-temp">
+                  <h1 class="home-text08">TEMP</h1>
+                  <span id="temperature" class="home-text09"></span>
+                </div>
+                <div class="home-hum">
+                  <h1 class="home-text10">HUM</h1>
+                  <span id="humidity" class="home-text11"></span>
+                </div>
+              </div>
+            </div>
+            <div class="home-date">
+              <span class="home-text12">
+                <span id="current-date"></span>
+                <br />
+              </span>
+            </div>
+          </div>
           <div id="lockUnlockElement" class="home-lock-unlock">
-            <div class="button-container button-root-class-name">
+            <div class="button-container button-root-class-name2">
               <button id="lockButton" type="button" class="button-button button">
                 <span>LOCK</span>
               </button>
@@ -160,97 +234,19 @@
               </button>
             </div>
           </div>
-          <div class="home-camera-status">
-            <div class="home-container03">
-              <div class="home-container04">
-                <span class="home-text05">
-                  <span class="home-text06">CAMERA</span>
-                  <br class="home-text07" />
-                  <span class="home-text08">STATUS:</span>
-                  <br />
-                </span>
-              </div>
-              <div class="home-container05">
-                <span class="home-text10">
-                  <span class="home-text11">RECORDING</span>
-                  <br />
-                </span>
-              </div>
-            </div>
-            <div class="home-container06">
-              <div class="home-container07">
-                <span class="home-text13">
-                  <span>SECOND</span>
-                  <br />
-                  <span>STATUS:</span>
-                  <br />
-                </span>
-              </div>
-              <div class="home-container08">
-                <span class="home-text18">STATUS</span>
-              </div>
-            </div>
-          </div>
-          <div class="home-time-date-temp">
-            <div class="home-time">
-              <span class="home-date-time1">
-                <date-time-primitive
-                  format="h:mm"
-                  date="Sun May 12 2024 18:00:01 GMT+0200 (hora de verano de Europa central)"
-                ></date-time-primitive>
-              </span>
-            </div>
-            <div class="home-temp-hum">
-              <div class="home-container09">
-                <div class="home-temp">
-                  <h1 class="home-text19">TEMP</h1>
-                  <span id="temperature" class="home-text20"></span>
-                </div>
-                <div class="home-hum">
-                  <h1 class="home-text21">HUM</h1>
-                  <span id="humidity" class="home-text22"></span>
-                </div>
-              </div>
-            </div>
-            <div class="home-date">
-              <span class="home-date-time2">
-                <date-time-primitive
-                  format="MMMM D, YYYY"
-                  date="Sun May 12 2024 18:00:01 GMT+0200 (hora de verano de Europa central)"
-                ></date-time-primitive>
-              </span>
-            </div>
-          </div>
-          <div class="home-last-activity">
+          <div id="NightModeElement" class="home-night-mode">
             <div class="home-container10">
-              <div class="home-container11">
-                <span class="home-text23">
-                  <span class="home-text24">LAST&nbsp;</span>
-                  <br />
-                  <span>ACTIVITY:</span>
-                  <br />
-                </span>
-              </div>
-              <div class="home-container12">
-                <span class="home-date-time3">
-                  <date-time-primitive
-                    format="MMM D, YYYY h:mm A"
-                    date="Mon May 13 2024 10:21:20 GMT+0200 (hora de verano de Europa central)"
-                  ></date-time-primitive>
-                </span>
+              <div class="button-container button-root-class-name8">
+                <button id="nightOnButton" type="button" class="button-button button">
+                  <span>NIGHT ON</span>
+                </button>
               </div>
             </div>
-            <div class="home-container13">
-              <div class="home-container14">
-                <span class="home-text28">
-                  <span>PIR</span>
-                  <br />
-                  <span>DETECTION:</span>
-                  <br />
-                </span>
-              </div>
-              <div class="home-container15">
-                <span class="home-text33">DETECTED</span>
+            <div class="home-container11">
+              <div class="button-container button-root-class-name9">
+                <button id="nightOffButton" type="button" class="button-button button">
+                  <span>NIGHT OFF</span>
+                </button>
               </div>
             </div>
           </div>
